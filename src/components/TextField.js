@@ -1,12 +1,12 @@
 import * as React from 'react';
-import * as theme from '../../styleguide/theme';
+import * as theme from '../theme';
 import { withStyles } from '@material-ui/core/styles';
 import { TextField, InputAdornment, WithStyles } from '@material-ui/core';
 
 const C3 = theme.C3;
 const styles = {
   container: {
-    width: '100%'
+    width: '80%'
   },
   cssLabel: {
     '&$cssFocused': {
@@ -26,22 +26,15 @@ const InputField = ({
   classes,
   type,
   onChange,
-  autoFocus,
-  focused,
   value,
   label,
   id,
   ...otherProps
 }) => {
-  const isSnoozeField =
-    id === 'snoozeevery' ? (
-      <InputAdornment position="start">Min</InputAdornment>
-    ) : null;
   return (
     <div className={classes.container}>
       <TextField
         {...otherProps}
-        autoFocus={autoFocus}
         type={type}
         style={{ width: '100%' }}
         InputLabelProps={{
@@ -51,9 +44,7 @@ const InputField = ({
           }
         }}
         InputProps={{
-          classes: { underline: classes.cssUnderline },
-          startAdornment: isSnoozeField,
-          autoFocus: focused
+          classes: { underline: classes.cssUnderline }
         }}
         onChange={onChange}
         label={label}
