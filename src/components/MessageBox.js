@@ -10,7 +10,10 @@ class MessageBox extends Component {
     e.preventDefault();
     this.setState({ message: e.target.value });
   };
-
+  sendMessage = () => {
+    this.props.sendMessage(this.state.message);
+    this.setState({ message: '' });
+  };
   render() {
     const Container = styled.div`
       width: 100%;

@@ -1,5 +1,4 @@
 import React from 'react';
-import io from 'socket.io-client';
 import {
   Paper,
   Divider,
@@ -8,53 +7,29 @@ import {
   DialogActions,
   Button,
   Typography,
-  ButtonBase
+  ButtonBase,
+  Fade
 } from '@material-ui/core';
 import styled from 'styled-components';
 import { C1, C3 } from '../../theme';
 import TextField from '../../components/TextField';
 import MessageBox from '../../components/MessageBox';
+import { throws } from 'assert';
 
-class Chatroom extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      username: '',
-      open: true,
-      message: '',
-      messages: []
-    };
-
-    this.socket = io('localhost:5000');
-
-    this.socket.on('RECEIVE_MESSAGE', function(data) {
-      addMessage(data);
-    });
-
-    const addMessage = data => {
-      this.setState({ messages: [...this.state.messages, data] });
-    };
-
-    this.sendMessage = e => {
-      e.preventDefault();
-      this.socket.emit('SEND_MESSAGE', {
-        author: this.state.username,
-        message: this.state.message
-      });
-      this.setState({ message: '' });
-    };
-  }
+class Chatroom extends React.Component {
+  state = { username: '', pizza: false };
   componentDidUpdate(prevProps, prevState) {
-    console.log(this.state);
+    if (prevProps.open !== this.props.open) {
+      setTimeout(() => {
+        this.setState({ pizza: true });
+      }, 2000);
+    }
   }
-  handleSubmitUsername = e => {
-    e.preventDefault();
-    this.setState({ open: false });
-  };
   usernameChanged = e => {
-    e.preventDefault();
     this.setState({ username: e.target.value });
+  };
+  handleSubmit = () => {
+    this.props.submitUsername(this.state.username);
   };
   render() {
     const Container = styled.div`
@@ -73,15 +48,12 @@ class Chatroom extends React.PureComponent {
       padding: 25px;
       display: flex;
       flex-direction: column;
+      overflow: auto;
     `;
 
     return (
       <div>
-        <Dialog
-          open={this.state.open}
-          onClose={() => this.setState({ open: false })}
-          disableBackdropClick={true}
-        >
+        <Dialog open={this.props.open} disableBackdropClick={true}>
           <DialogTitle>
             <Typography variant="h3" color="inherit">
               Enter your name
@@ -102,7 +74,7 @@ class Chatroom extends React.PureComponent {
             />
             <Button
               id="agreeDialog"
-              onClick={this.handleSubmitUsername}
+              onClick={this.handleSubmit}
               color="primary"
               style={{ marginTop: '20px' }}
             >
@@ -110,26 +82,34 @@ class Chatroom extends React.PureComponent {
             </Button>
           </DialogActions>
         </Dialog>
-        <Typography
-          variant="h4"
-          color="textPrimary"
-          style={{ paddingLeft: '20px', paddingTop: '20px' }}
-        >
-          The coolest chatroom ever
-        </Typography>
+        <Fade in={!this.props.open} timeout={400}>
+          <Typography
+            variant="h4"
+            color="textPrimary"
+            style={{ paddingLeft: '20px', paddingTop: '20px' }}
+          >
+            The bot doesn't respect people who aren't JavaScript lovers.
+          </Typography>
+        </Fade>
+        <Fade in={this.state.pizza} timeout={1500}>
+          <Typography
+            variant="h4"
+            color="textPrimary"
+            style={{ paddingLeft: '20px', paddingTop: '5px' }}
+          >
+            Or pizza lovers.
+          </Typography>
+        </Fade>
         <Container>
           <Chat>
-            <Divider />
-
-            {this.state.messages.map((message, index) => {
-              return (
+            {this.props.messages.map((message, index) => {
+              return message.message === '' ? null : (
                 <div key={index}>
                   {message.author}: {message.message}
                   <Divider />
                 </div>
               );
             })}
-            <div style={{ alignSelf: 'flex-end' }} />
           </Chat>
         </Container>
       </div>
