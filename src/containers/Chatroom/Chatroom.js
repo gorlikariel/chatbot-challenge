@@ -72,13 +72,20 @@ class Chatroom extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
-
+        <Typography
+          variant="h4"
+          color="textPrimary"
+          style={{ paddingLeft: '20px', paddingTop: '20px' }}
+        >
+          The coolest chatroom ever
+        </Typography>
         <Container>
           <Chat>
-            hello <Divider />
+            <Divider />
             WASSSUP
           </Chat>
         </Container>
+        `
       </>
     );
   }
