@@ -31,13 +31,6 @@ class App extends Component {
         messageValues: [...this.state.messageValues, data.message]
       });
     };
-
-    // this.sendMessage = (message, isBot) => {
-    //   this.socket.emit('SEND_MESSAGE', {
-    //     author: isBot ? '[BOT]' : this.state.username,
-    //     message: isBot ? message : this.state.message
-    //   });
-    // };
   }
 
   render() {
@@ -82,6 +75,25 @@ class App extends Component {
                     message.toLowerCase() === 'js'
                       ? 'Good... I like you..'
                       : 'Shame on you, get out of my chat'
+                });
+              }
+              if (
+                doesLastMessageMatch('is js the best?') ||
+                doesLastMessageMatch('is javascript the best?') ||
+                doesLastMessageMatch('is pizza the best?') ||
+                doesLastMessageMatch(
+                  'is javascript the best programming language?'
+                ) ||
+                doesLastMessageMatch('is pizza the best food?')
+              ) {
+                this.socket.emit('SEND_MESSAGE', {
+                  author: '[BOT]',
+                  message:
+                    message.toLowerCase() === 'yes' ||
+                    message.toLowerCase() === 'yup' ||
+                    message.toLowerCase() === 'of course'
+                      ? 'You got lucky....'
+                      : 'YOU ARE DISGUSTING'
                 });
               }
               if (
