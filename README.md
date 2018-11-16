@@ -1,4 +1,7 @@
 
+![bot-demo](https://raw.githubusercontent.com/gorlikariel/chatbot-challenge/master/public/bot-demo.gif)
+
+
 ## Available Scripts
 
 In the project directory, you can run:
